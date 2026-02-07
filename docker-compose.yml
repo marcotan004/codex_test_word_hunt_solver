@@ -1,0 +1,26 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "5174:5174"
+    environment:
+      - PORT=5174
+    volumes:
+      - ./server:/app/server
+    command: npm run dev
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    ports:
+      - "8080:8080"
+    environment:
+      - VITE_API_URL=http://localhost:5174
+    volumes:
+      - ./client:/app/client
+    command: npm run dev -- --host 0.0.0.0 --port 8080
+    depends_on:
+      - server

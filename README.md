@@ -46,6 +46,24 @@ Stop both:
 /Users/marcotan/Desktop/codex_test_word_hunt_solver/scripts/dev-down.sh
 ```
 
+## Docker
+
+Run client + server with Docker Compose:
+
+```bash
+cd /Users/marcotan/Desktop/codex_test_word_hunt_solver
+docker compose up --build
+```
+
+Stop:
+
+```bash
+docker compose down
+```
+
+Client: `http://localhost:8080`  
+Server: `http://localhost:5174`
+
 The API runs on `http://localhost:5174` by default. You can change the API URL by setting `VITE_API_URL` in the client environment.
 
 ## API Docs (Swagger)
