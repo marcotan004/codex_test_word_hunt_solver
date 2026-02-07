@@ -132,37 +132,41 @@ function App() {
   return (
     <div className="app">
       <Header />
-      <section className="panel">
-        <h2>Board</h2>
-        <div className="board">
-          <Grid grid={grid} activePath={activePath} cursorIndex={cursorIndex} onChange={setGrid} />
-          <div className="grid-actions">
-            <button onClick={handleClear}>Clear</button>
-            <button onClick={handleSolve} disabled={loading}>Solve</button>
-          </div>
+      <div className="main-panels">
+        <div className="panel-stack">
+          <section className="panel">
+            <h2>Board</h2>
+            <div className="board">
+              <Grid grid={grid} activePath={activePath} cursorIndex={cursorIndex} onChange={setGrid} />
+              <div className="grid-actions">
+                <button onClick={handleClear}>Clear</button>
+                <button onClick={handleSolve} disabled={loading}>Solve</button>
+              </div>
+            </div>
+          </section>
+
+          {featureFlags.ocr ? (
+            <OcrPanel
+              onLetters={(letters) => {
+                setGrid(letters);
+              }}
+            />
+          ) : null}
         </div>
-      </section>
 
-      {featureFlags.ocr ? (
-        <OcrPanel
-          onLetters={(letters) => {
-            setGrid(letters);
+        <Results
+          results={sortedResults}
+          totalScore={totalScore}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          onHover={(path) => {
+            if (!isAnimating) setActivePath(path);
           }}
+          onPlay={startAnimation}
+          onStop={stopAnimation}
+          isAnimating={isAnimating}
         />
-      ) : null}
-
-      <Results
-        results={sortedResults}
-        totalScore={totalScore}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-        onHover={(path) => {
-          if (!isAnimating) setActivePath(path);
-        }}
-        onPlay={startAnimation}
-        onStop={stopAnimation}
-        isAnimating={isAnimating}
-      />
+      </div>
     </div>
   );
 }
