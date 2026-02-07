@@ -1,0 +1,19 @@
+{
+  "name": "word-hunt-monorepo",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "nx": "nx",
+    "dev": "nx run-many -t dev --projects=server,client --parallel",
+    "lint": "nx run-many -t lint",
+    "test": "nx run-many -t test",
+    "dev:client": "nx run client:dev",
+    "dev:server": "nx run server:dev"
+  },
+  "devDependencies": {
+    "nx": "^20.6.4"
+  }
+}

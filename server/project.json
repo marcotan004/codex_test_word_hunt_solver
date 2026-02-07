@@ -1,0 +1,35 @@
+{
+  "name": "server",
+  "projectType": "application",
+  "sourceRoot": "server/src",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "server",
+        "command": "npm run dev"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "server",
+        "command": "npm run build"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "server",
+        "command": "npm run test"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "server",
+        "command": "npm run lint"
+      }
+    }
+  }
+}
