@@ -62,11 +62,6 @@ body {
   box-shadow: var(--shadow);
 }
 
-.panel h2 {
-  margin-top: 0;
-  font-size: 20px;
-}
-
 .board {
   display: grid;
   gap: 16px;
@@ -133,19 +128,10 @@ body {
   gap: 12px;
 }
 
-button {
-  border: none;
-  background: var(--accent);
-  color: #fff;
-  padding: 10px 16px;
+.MuiButton-root {
   border-radius: 999px;
+  text-transform: none;
   font-weight: 600;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .ocr {
