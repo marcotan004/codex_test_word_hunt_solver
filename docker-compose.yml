@@ -9,7 +9,8 @@ services:
       - PORT=5174
     volumes:
       - ./server:/app/server
-    command: npm run dev
+      - /app/server/node_modules
+    command: sh -c "npm ci && npm run dev"
 
   client:
     build:
@@ -21,6 +22,7 @@ services:
       - VITE_API_URL=http://localhost:5174
     volumes:
       - ./client:/app/client
-    command: npm run dev -- --host 0.0.0.0 --port 8080
+      - /app/client/node_modules
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0 --port 8080"
     depends_on:
       - server
