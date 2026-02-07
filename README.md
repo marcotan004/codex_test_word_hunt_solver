@@ -76,7 +76,7 @@ When the server is running, open:
 
 Create a `.env` in `/Users/marcotan/Desktop/codex_test_word_hunt_solver/client` or copy `.env.example`.
 
-- `VITE_FEATURE_OCR=true|false` (default: true)
+- `VITE_FEATURE_OCR=true|false` (default: false)
 
 ## Notes
 
