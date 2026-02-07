@@ -8,7 +8,12 @@ import Results from './components/Results';
 import { featureFlags } from './lib/featureFlags';
 
 const GRID_SIZE = 4;
-const initialGrid = Array(GRID_SIZE * GRID_SIZE).fill('');
+const initialGrid = [
+  'T', 'T', 'L', 'E',
+  'M', 'X', 'O', 'S',
+  'L', 'A', 'A', 'Y',
+  'F', 'H', 'R', 'A',
+];
 
 function App() {
   const [grid, setGrid] = useState<string[]>(initialGrid);
