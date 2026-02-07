@@ -40,6 +40,12 @@ When the server is running, open:
 
 - `http://localhost:5174/docs`
 
+## Feature Flags (Client)
+
+Create a `.env` in `/Users/marcotan/Desktop/codex_test_word_hunt_solver/client` or copy `.env.example`.
+
+- `VITE_FEATURE_OCR=true|false` (default: true)
+
 ## Notes
 
 - Dictionary is in `/Users/marcotan/Desktop/codex_test_word_hunt_solver/server/data/words_dictionary.json` (from dwyl/english-words).

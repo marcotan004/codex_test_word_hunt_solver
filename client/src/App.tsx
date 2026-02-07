@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Grid from './components/Grid';
 import OcrPanel from './components/OcrPanel';
 import Results from './components/Results';
+import { featureFlags } from './lib/featureFlags';
 
 const GRID_SIZE = 4;
 const initialGrid = Array(GRID_SIZE * GRID_SIZE).fill('');
@@ -73,11 +74,13 @@ function App() {
         </div>
       </section>
 
-      <OcrPanel
-        onLetters={(letters) => {
-          setGrid(letters);
-        }}
-      />
+      {featureFlags.ocr ? (
+        <OcrPanel
+          onLetters={(letters) => {
+            setGrid(letters);
+          }}
+        />
+      ) : null}
 
       <Results
         results={sortedResults}
