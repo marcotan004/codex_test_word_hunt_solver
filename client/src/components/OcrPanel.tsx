@@ -80,23 +80,21 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
     reader.readAsDataURL(file);
   };
 
-  const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!image) return;
     const rect = event.currentTarget.getBoundingClientRect();
-    setSelectionStart({ x: event.clientX - rect.left, y: event.clientY - rect.top });
-    setSelectionEnd(null);
-  };
+    const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
 
-  const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!selectionStart) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    setSelectionEnd({ x: event.clientX - rect.left, y: event.clientY - rect.top });
-  };
+    if (!selectionStart || (selectionStart && selectionEnd)) {
+      setSelectionStart(point);
+      setSelectionEnd(null);
+      setSelection(null);
+      setStatus('Selection started. Click again to finish.');
+      return;
+    }
 
-  const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!selectionStart) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    setSelectionEnd({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+    setSelectionEnd(point);
+    setStatus('Selection complete. Run OCR to extract letters.');
   };
 
   const getWorker = async () => {
@@ -213,15 +211,10 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
             }}
           />
           <button onClick={runOcr} disabled={!image || running}>Run OCR</button>
-          <p className="hint">Tip: after upload, drag to select the 4x4 grid area, then click Run OCR.</p>
+          <p className="hint">Tip: after upload, click once to start the grid box and click again to finish it, then run OCR.</p>
         </div>
         <div className="ocr-canvas-wrap">
-          <canvas
-            ref={canvasRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-          />
+          <canvas ref={canvasRef} onClick={handleCanvasClick} />
         </div>
         <div className="status">{status}</div>
       </div>
