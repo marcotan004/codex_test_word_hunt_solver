@@ -237,9 +237,10 @@ canvas {
   font-weight: 600;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .main-panels {
     grid-template-columns: 1fr;
+    justify-content: stretch;
   }
 
   .grid {
