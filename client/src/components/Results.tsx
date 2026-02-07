@@ -32,6 +32,7 @@ export default function Results({
               <option value="score">Score</option>
               <option value="length">Length</option>
               <option value="alpha">Alphabetical</option>
+              <option value="position">Board Position</option>
             </select>
           </label>
           <div className="result-actions">

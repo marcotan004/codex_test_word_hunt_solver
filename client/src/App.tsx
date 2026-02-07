@@ -26,6 +26,12 @@ function App() {
       items.sort((a, b) => b.score - a.score || b.length - a.length || a.word.localeCompare(b.word));
     } else if (sortBy === 'length') {
       items.sort((a, b) => b.length - a.length || b.score - a.score || a.word.localeCompare(b.word));
+    } else if (sortBy === 'position') {
+      items.sort((a, b) => {
+        const aStart = a.path[0] ?? 0;
+        const bStart = b.path[0] ?? 0;
+        return aStart - bStart || b.score - a.score || a.word.localeCompare(b.word);
+      });
     } else {
       items.sort((a, b) => a.word.localeCompare(b.word));
     }
