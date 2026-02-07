@@ -32,6 +32,20 @@ cd /Users/marcotan/Desktop/codex_test_word_hunt_solver/client
 npm run dev
 ```
 
+### Convenience scripts
+
+Start both server and client:
+
+```bash
+/Users/marcotan/Desktop/codex_test_word_hunt_solver/scripts/dev-up.sh
+```
+
+Stop both:
+
+```bash
+/Users/marcotan/Desktop/codex_test_word_hunt_solver/scripts/dev-down.sh
+```
+
 The API runs on `http://localhost:5174` by default. You can change the API URL by setting `VITE_API_URL` in the client environment.
 
 ## API Docs (Swagger)
