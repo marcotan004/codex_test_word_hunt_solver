@@ -6,7 +6,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "test": "vitest run",
+    "test": "ROLLUP_DISABLE_NATIVE=1 vitest run",
     "test:watch": "vitest",
     "lint": "eslint ."
   },
