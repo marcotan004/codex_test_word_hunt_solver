@@ -15,10 +15,25 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: server/package-lock.json
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
       - name: Install dependencies
         working-directory: server
         run: npm ci
       - name: Run tests
         working-directory: server
         run: npm run test
+      - name: Run lint
+        working-directory: server
+        run: npm run lint
+
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+      - name: Run client tests
+        working-directory: client
+        run: npm run test
+      - name: Run client lint
+        working-directory: client
+        run: npm run lint

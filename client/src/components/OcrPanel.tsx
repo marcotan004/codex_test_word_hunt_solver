@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react';
 import { createWorker, type Worker } from 'tesseract.js';
 
 const GRID_SIZE = 4;
@@ -22,7 +22,7 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
   const [status, setStatus] = useState('');
   const [running, setRunning] = useState(false);
 
-  const draw = () => {
+  const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || !image) return;
     const ctx = canvas.getContext('2d');
@@ -45,13 +45,12 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
       ctx.lineWidth = 3;
       ctx.strokeRect(x, y, w, h);
       ctx.restore();
-      setSelection({ x, y, w, h });
     }
-  };
+  }, [image, selectionStart, selectionEnd]);
 
   useEffect(() => {
     draw();
-  }, [image, selectionStart, selectionEnd]);
+  }, [draw]);
 
   useEffect(() => {
     return () => {
@@ -80,7 +79,7 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
     reader.readAsDataURL(file);
   };
 
-  const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleCanvasClick = (event: MouseEvent<HTMLCanvasElement>) => {
     if (!image) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
@@ -93,6 +92,11 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
       return;
     }
 
+    const x = Math.min(selectionStart.x, point.x);
+    const y = Math.min(selectionStart.y, point.y);
+    const w = Math.abs(selectionStart.x - point.x);
+    const h = Math.abs(selectionStart.y - point.y);
+    setSelection({ x, y, w, h });
     setSelectionEnd(point);
     setStatus('Selection complete. Run OCR to extract letters.');
   };
