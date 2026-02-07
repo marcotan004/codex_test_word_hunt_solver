@@ -1,9 +1,11 @@
 import express from 'express';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
 import { buildTrie, type TrieNode } from './trie.js';
 import { loadDictionary } from './dictionary.js';
 import { solveBoard } from './solver.js';
 import type { ScoringConfig } from './scoring.js';
+import { swaggerSpec } from './swagger.js';
 
 const app = express();
 app.use(cors());
@@ -21,6 +23,8 @@ async function init() {
 app.get('/health', (_req, res) => {
   res.json({ ok: true, wordsCount });
 });
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.post('/solve', (req, res) => {
   if (!trie) {

@@ -34,6 +34,12 @@ npm run dev
 
 The API runs on `http://localhost:5174` by default. You can change the API URL by setting `VITE_API_URL` in the client environment.
 
+## API Docs (Swagger)
+
+When the server is running, open:
+
+- `http://localhost:5174/docs`
+
 ## Notes
 
 - Dictionary is in `/Users/marcotan/Desktop/codex_test_word_hunt_solver/server/data/words.txt`.
