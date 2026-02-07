@@ -24,26 +24,6 @@ const definition = {
             minItems: 16,
             maxItems: 16,
           },
-          scoring: {
-            type: 'object',
-            properties: {
-              minLength: { type: 'number', example: 3 },
-              baseScore: { type: 'number', example: 0 },
-              perLetter: { type: 'number', example: 1 },
-              lengthBonus: {
-                type: 'array',
-                items: { type: 'number' },
-                example: [0, 0, 0, 1, 2, 4, 6, 8, 12, 16],
-              },
-              useTable: { type: 'boolean', example: false },
-              scoreTable: {
-                type: 'object',
-                additionalProperties: { type: 'number' },
-                example: { '3': 1, '4': 2 },
-                nullable: true,
-              },
-            },
-          },
         },
         required: ['board'],
       },

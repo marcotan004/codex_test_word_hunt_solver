@@ -5,22 +5,13 @@ export type SolveResult = {
   length: number;
 };
 
-export type ScoringConfig = {
-  minLength: number;
-  baseScore: number;
-  perLetter: number;
-  lengthBonus: number[];
-  useTable: boolean;
-  scoreTable: Record<number, number> | null;
-};
-
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174';
 
-export async function solveBoard(board: string[], scoring: ScoringConfig) {
+export async function solveBoard(board: string[]) {
   const response = await fetch(`${API_URL}/solve`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ board, scoring }),
+    body: JSON.stringify({ board }),
   });
 
   if (!response.ok) {

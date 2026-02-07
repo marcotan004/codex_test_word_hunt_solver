@@ -1,25 +1,15 @@
-export type ScoringConfig = {
-  minLength: number;
-  baseScore: number;
-  perLetter: number;
-  lengthBonus: number[];
-  useTable: boolean;
-  scoreTable: Record<number, number> | null;
+const SCORE_TABLE: Record<number, number> = {
+  3: 100,
+  4: 400,
+  5: 800,
+  6: 1400,
+  7: 1800,
+  8: 2200,
 };
 
-export function scoreWord(word: string, config: ScoringConfig): number {
+export function scoreWord(word: string): number {
   const length = word.length;
-  const minLength = Number(config.minLength ?? 3);
-  if (length < minLength) return 0;
-
-  if (config.useTable && config.scoreTable) {
-    const tableScore = config.scoreTable[length];
-    if (Number.isFinite(tableScore)) return tableScore;
-  }
-
-  const base = Number(config.baseScore ?? 0) || 0;
-  const perLetter = Number(config.perLetter ?? 0) || 0;
-  const bonus = Array.isArray(config.lengthBonus) ? Number(config.lengthBonus[length - 1] ?? 0) : 0;
-
-  return base + perLetter * length + bonus;
+  if (length < 3) return 0;
+  if (length <= 8) return SCORE_TABLE[length] ?? 0;
+  return 2200 + (length - 8) * 400;
 }

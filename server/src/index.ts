@@ -4,7 +4,6 @@ import swaggerUi from 'swagger-ui-express';
 import { buildTrie, type TrieNode } from './trie.js';
 import { loadDictionary } from './dictionary.js';
 import { solveBoard } from './solver.js';
-import type { ScoringConfig } from './scoring.js';
 import { swaggerSpec } from './swagger.js';
 
 const app = express();
@@ -32,7 +31,7 @@ app.post('/solve', (req, res) => {
     return;
   }
 
-  const { board, scoring } = req.body || {};
+  const { board } = req.body || {};
   if (!Array.isArray(board) || board.length !== 16) {
     res.status(400).json({ error: 'Board must be an array of 16 letters.' });
     return;
@@ -44,16 +43,7 @@ app.post('/solve', (req, res) => {
     return;
   }
 
-  const config: ScoringConfig = {
-    minLength: Number(scoring?.minLength ?? 3),
-    baseScore: Number(scoring?.baseScore ?? 0),
-    perLetter: Number(scoring?.perLetter ?? 1),
-    lengthBonus: Array.isArray(scoring?.lengthBonus) ? scoring.lengthBonus : [],
-    useTable: Boolean(scoring?.useTable),
-    scoreTable: scoring?.scoreTable ?? null,
-  };
-
-  const results = solveBoard(cleaned, trie, config);
+  const results = solveBoard(cleaned, trie);
 
   res.json({ results });
 });

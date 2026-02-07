@@ -1,4 +1,4 @@
-import { scoreWord, type ScoringConfig } from './scoring.js';
+import { scoreWord } from './scoring.js';
 import type { TrieNode } from './trie.js';
 
 const GRID_SIZE = 4;
@@ -31,9 +31,9 @@ export type SolveResult = {
   length: number;
 };
 
-export function solveBoard(board: string[], trie: TrieNode, config: ScoringConfig): SolveResult[] {
+export function solveBoard(board: string[], trie: TrieNode): SolveResult[] {
   const results = new Map<string, number[]>();
-  const minLength = Number(config.minLength ?? 3);
+  const minLength = 3;
 
   function dfs(index: number, node: TrieNode, visited: number, path: number[]) {
     const letter = board[index];
@@ -60,7 +60,7 @@ export function solveBoard(board: string[], trie: TrieNode, config: ScoringConfi
   }
 
   return Array.from(results.entries()).map(([word, path]) => {
-    const score = scoreWord(word, config);
+    const score = scoreWord(word);
     return { word, path, score, length: word.length };
   });
 }

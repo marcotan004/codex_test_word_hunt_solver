@@ -1,11 +1,9 @@
 import { useMemo, useState } from 'react';
 import './App.css';
 import { solveBoard, type SolveResult } from './lib/api';
-import { parseLengthBonus, parseScoreTable } from './lib/scoring';
 import Header from './components/Header';
 import Grid from './components/Grid';
 import OcrPanel from './components/OcrPanel';
-import ScoringPanel from './components/ScoringPanel';
 import Results from './components/Results';
 
 const GRID_SIZE = 4;
@@ -17,26 +15,6 @@ function App() {
   const [sortBy, setSortBy] = useState('score');
   const [activePath, setActivePath] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const [scoring, setScoring] = useState({
-    minLength: 3,
-    baseScore: 0,
-    perLetter: 1,
-    lengthBonus: '0,0,0,1,2,4,6,8,12,16',
-    useTable: false,
-    scoreTable: '',
-  });
-
-  const parsedScoring = useMemo(() => {
-    return {
-      minLength: Number(scoring.minLength) || 3,
-      baseScore: Number(scoring.baseScore) || 0,
-      perLetter: Number(scoring.perLetter) || 0,
-      lengthBonus: parseLengthBonus(scoring.lengthBonus),
-      useTable: scoring.useTable,
-      scoreTable: parseScoreTable(scoring.scoreTable),
-    };
-  }, [scoring]);
 
   const sortedResults = useMemo(() => {
     const items = [...results];
@@ -62,7 +40,7 @@ function App() {
 
     setLoading(true);
     try {
-      const response = await solveBoard(grid, parsedScoring);
+      const response = await solveBoard(grid);
       setResults(response.results ?? []);
     } catch (error) {
       if (error instanceof Error) {
@@ -100,8 +78,6 @@ function App() {
           setGrid(letters);
         }}
       />
-
-      <ScoringPanel scoring={scoring} onChange={setScoring} />
 
       <Results
         results={sortedResults}
