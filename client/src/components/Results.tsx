@@ -6,6 +6,9 @@ type ResultsProps = {
   sortBy: string;
   onSortChange: (value: string) => void;
   onHover: (path: number[]) => void;
+  onPlay: () => void;
+  onStop: () => void;
+  isAnimating: boolean;
 };
 
 export default function Results({
@@ -14,6 +17,9 @@ export default function Results({
   sortBy,
   onSortChange,
   onHover,
+  onPlay,
+  onStop,
+  isAnimating,
 }: ResultsProps) {
   return (
     <section className="panel">
@@ -28,6 +34,14 @@ export default function Results({
               <option value="alpha">Alphabetical</option>
             </select>
           </label>
+          <div className="result-actions">
+            <button onClick={onPlay} disabled={isAnimating || results.length === 0}>
+              Play Top 20
+            </button>
+            <button onClick={onStop} disabled={!isAnimating}>
+              Stop
+            </button>
+          </div>
           <div className="totals">
             <span>{results.length} words</span>
             <span>Score: {totalScore}</span>
