@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
 import { createWorker, type Worker } from 'tesseract.js';
-import workerPath from 'tesseract.js/dist/worker.min.js?url';
-import corePath from 'tesseract.js-core/tesseract-core.wasm.js?url';
+const workerPath = '/tesseract/worker.min.js';
+const corePath = '/tesseract-core';
 import { featureFlags } from '../lib/featureFlags';
 
 const GRID_SIZE = 4;
