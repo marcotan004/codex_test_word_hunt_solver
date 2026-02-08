@@ -32,4 +32,37 @@ describe('App', () => {
       expect(screen.getByText('CAT')).toBeInTheDocument();
     });
   });
+
+  it('starts and stops animation', async () => {
+    const rafSpy = vi
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation(() => 1);
+    const cafSpy = vi
+      .spyOn(window, 'cancelAnimationFrame')
+      .mockImplementation(() => {});
+
+    render(<App />);
+
+    fillGrid();
+    fireEvent.click(screen.getByText('Solve'));
+
+    await waitFor(() => {
+      expect(screen.getByText('CAT')).toBeInTheDocument();
+    });
+
+    const playButton = screen.getByRole('button', { name: 'Play Top 20' });
+    const stopButton = screen.getByRole('button', { name: 'Stop' });
+
+    expect(stopButton).toBeDisabled();
+    fireEvent.click(playButton);
+    expect(stopButton).toBeEnabled();
+
+    fireEvent.click(stopButton);
+    await waitFor(() => {
+      expect(stopButton).toBeDisabled();
+    });
+
+    rafSpy.mockRestore();
+    cafSpy.mockRestore();
+  });
 });
