@@ -6,6 +6,7 @@ const GRID_SIZE = 4;
 const MAX_WIDTH = 900;
 const CALIBRATION_KEY = 'wordhunt-ocr-grid-v1';
 const OCR_CELL_TIMEOUT_MS = 15000;
+const OCR_WORKER_TIMEOUT_MS = 45000;
 const DEBUG_TICK_MS = 500;
 
 type OcrPanelProps = {
@@ -29,6 +30,8 @@ type DebugInfo = {
   lastProgress: number | null;
   lastLogAt: number | null;
   timeouts: number;
+  stage: string;
+  stageStartedAt: number;
 };
 
 function clamp01(value: number) {
@@ -74,6 +77,18 @@ function rectFromPoints(a: Point, b: Point): Selection {
     w: Math.abs(a.x - b.x),
     h: Math.abs(a.y - b.y),
   };
+}
+
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  let timer: number | null = null;
+  try {
+    return await new Promise<T>((resolve, reject) => {
+      timer = window.setTimeout(() => reject(new Error('OCR worker timed out')), timeoutMs);
+      promise.then(resolve).catch(reject);
+    });
+  } finally {
+    if (timer) window.clearTimeout(timer);
+  }
 }
 
 export default function OcrPanel({ onLetters }: OcrPanelProps) {
@@ -268,6 +283,15 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
 
   const getWorker = async () => {
     if (!workerRef.current) {
+      if (showDebug) {
+        const now = Date.now();
+        setDebugInfo((info) => (info ? {
+          ...info,
+          stage: 'Creating worker',
+          stageStartedAt: now,
+        } : info));
+      }
+      setStatus('Loading OCR engine (first run can take 10-30s)...');
       const worker = await createWorker({
         logger: (message) => {
           if (showDebug) {
@@ -283,9 +307,21 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
           }
         },
       });
-      await worker.loadLanguage('eng');
-      await worker.initialize('eng');
+      if (showDebug) {
+        const now = Date.now();
+        setDebugInfo((info) => (info ? { ...info, stage: 'Loading language', stageStartedAt: now } : info));
+      }
+      await withTimeout(worker.loadLanguage('eng'), OCR_WORKER_TIMEOUT_MS);
+      if (showDebug) {
+        const now = Date.now();
+        setDebugInfo((info) => (info ? { ...info, stage: 'Initializing', stageStartedAt: now } : info));
+      }
+      await withTimeout(worker.initialize('eng'), OCR_WORKER_TIMEOUT_MS);
       await worker.setParameters({ tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' });
+      if (showDebug) {
+        const now = Date.now();
+        setDebugInfo((info) => (info ? { ...info, stage: 'Ready', stageStartedAt: now } : info));
+      }
       workerRef.current = worker;
     }
     return workerRef.current;
@@ -339,6 +375,8 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
         lastProgress: null,
         lastLogAt: null,
         timeouts: 0,
+        stage: 'Starting',
+        stageStartedAt: now,
       });
     }
 
@@ -365,7 +403,15 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
 
     const letters: string[] = [];
     const metrics: CellMetric[] = [];
-    let worker = await getWorker();
+    let worker: Worker;
+    try {
+      worker = await getWorker();
+    } catch (error) {
+      setRunning(false);
+      const message = error instanceof Error ? error.message : 'OCR worker failed to load';
+      setStatus(`${message}. Check network access and reload.`);
+      return;
+    }
     let cellIndex = 0;
 
     for (let row = 0; row < GRID_SIZE; row += 1) {
@@ -376,6 +422,8 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
             ...info,
             current: cellIndex,
             cellStartedAt: Date.now(),
+            stage: 'Recognizing',
+            stageStartedAt: Date.now(),
           } : info));
         }
 
@@ -516,6 +564,7 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
           <div className="ocr-debug">
             <div className="ocr-debug-title">Dev: OCR debug</div>
             <div className="ocr-debug-stats">
+              <div>Stage: {debugInfo.stage} ({((now - debugInfo.stageStartedAt) / 1000).toFixed(1)}s)</div>
               <div>Cell: {debugInfo.current}/{debugInfo.total}</div>
               <div>Elapsed: {((now - debugInfo.startedAt) / 1000).toFixed(1)}s</div>
               <div>Cell time: {((now - debugInfo.cellStartedAt) / 1000).toFixed(1)}s</div>
