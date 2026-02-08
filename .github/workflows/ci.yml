@@ -9,6 +9,8 @@ on:
 jobs:
   test-server:
     runs-on: ubuntu-latest
+    env:
+      ROLLUP_DISABLE_NATIVE: 1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -20,7 +22,7 @@ jobs:
             client/package-lock.json
       - name: Install dependencies
         working-directory: server
-        run: npm ci
+        run: npm install --no-audit --no-fund
       - name: Run tests
         working-directory: server
         run: npm run test
@@ -30,7 +32,7 @@ jobs:
 
       - name: Install client dependencies
         working-directory: client
-        run: npm ci
+        run: npm install --no-audit --no-fund
       - name: Run client tests
         working-directory: client
         run: npm run test
