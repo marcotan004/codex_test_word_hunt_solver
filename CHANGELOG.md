@@ -6,6 +6,9 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 
 ## [Unreleased]
 
+### Fixed
+- OCR worker creation now uses explicit local asset paths and has a startup timeout.
+
 ## [0.1.0] - 2026-02-08
 
 ### Added

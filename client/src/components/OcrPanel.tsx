@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
 import { createWorker, type Worker } from 'tesseract.js';
+import workerPath from 'tesseract.js/dist/worker.min.js?url';
+import corePath from 'tesseract.js/dist/tesseract-core.wasm.js?url';
 import { featureFlags } from '../lib/featureFlags';
 
 const GRID_SIZE = 4;
@@ -292,12 +294,15 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
         } : info));
       }
       setStatus('Loading OCR engine (first run can take 10-30s)...');
-      const worker = await createWorker({
-        logger: (message) => {
-          if (showDebug) {
-            setDebugInfo((info) => (info ? {
-              ...info,
-              lastStatus: message.status,
+      const worker = await withTimeout(
+        createWorker({
+          workerPath,
+          corePath,
+          logger: (message) => {
+            if (showDebug) {
+              setDebugInfo((info) => (info ? {
+                ...info,
+                lastStatus: message.status,
               lastProgress: typeof message.progress === 'number' ? message.progress : null,
               lastLogAt: Date.now(),
             } : info));
@@ -306,7 +311,9 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
             setStatus(`OCR progress: ${Math.round(message.progress * 100)}%`);
           }
         },
-      });
+        }),
+        OCR_WORKER_TIMEOUT_MS
+      );
       if (showDebug) {
         const now = Date.now();
         setDebugInfo((info) => (info ? { ...info, stage: 'Loading language', stageStartedAt: now } : info));
