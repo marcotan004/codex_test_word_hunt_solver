@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import Results from './Results';
 
 const results = [
@@ -46,7 +46,7 @@ describe('Results', () => {
     expect(row).not.toBeNull();
     if (!row) return;
 
-    row.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    fireEvent.mouseEnter(row);
     expect(onHover).toHaveBeenCalledWith([0, 1, 2]);
   });
 
@@ -69,10 +69,10 @@ describe('Results', () => {
     expect(row).not.toBeNull();
     if (!row) return;
 
-    row.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    fireEvent.mouseEnter(row);
     expect(onHover).not.toHaveBeenCalled();
 
-    row.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+    fireEvent.mouseLeave(row);
     expect(onHover).toHaveBeenCalledWith([]);
   });
 });
