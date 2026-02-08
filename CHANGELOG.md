@@ -6,10 +6,13 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-02-08
+
 ### Added
 - OCR calibration: save and reuse the board crop across screenshots.
 - OCR debug panel (dev-only) showing per-cell confidence and progress metrics.
 - Per-cell OCR timeout with worker reset to avoid long hangs.
+- OCR worker startup timeout with stage tracking in debug mode.
 
 ### Changed
 - OCR selection is now click-and-drag instead of click-twice.
