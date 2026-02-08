@@ -154,6 +154,7 @@ body {
 canvas {
   max-width: 100%;
   border: 2px dashed #d0d0d0;
+  touch-action: none;
 }
 
 .status {
@@ -163,6 +164,53 @@ canvas {
 .hint {
   color: var(--muted);
   margin: 0;
+}
+
+.ocr-debug {
+  display: grid;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff7e8;
+  border: 1px solid #f0d4a5;
+  font-size: 13px;
+}
+
+.ocr-debug-title {
+  font-weight: 600;
+  color: #6b4b1c;
+}
+
+.ocr-debug-stats {
+  display: grid;
+  gap: 4px;
+  color: #7b5a2a;
+}
+
+.ocr-debug-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ocr-debug-cell {
+  display: grid;
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #f2e2c8;
+  text-align: center;
+}
+
+.ocr-debug-letter {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.ocr-debug-confidence {
+  color: #8a6a3d;
+  font-size: 12px;
 }
 
 .scoring {

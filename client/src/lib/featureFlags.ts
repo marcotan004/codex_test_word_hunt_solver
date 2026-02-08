@@ -5,4 +5,5 @@ const toBool = (value: string | undefined, fallback: boolean) => {
 
 export const featureFlags = {
   ocr: toBool(import.meta.env.VITE_FEATURE_OCR, false),
+  ocrDebug: toBool(import.meta.env.VITE_FEATURE_OCR_DEBUG, false),
 };
