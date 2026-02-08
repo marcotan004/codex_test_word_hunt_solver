@@ -16,6 +16,9 @@ describe('Results', () => {
         sortBy="score"
         onSortChange={() => {}}
         onHover={() => {}}
+        onPlay={() => {}}
+        onStop={() => {}}
+        isAnimating={false}
       />
     );
 

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react';
 import { createWorker, type Worker } from 'tesseract.js';
+import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 
 const GRID_SIZE = 4;
 const MAX_WIDTH = 900;
@@ -202,26 +203,40 @@ export default function OcrPanel({ onLetters }: OcrPanelProps) {
   };
 
   return (
-    <section className="panel">
-      <h2>Screenshot OCR</h2>
-      <div className="ocr">
-        <div className="ocr-controls">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) handleFile(file);
-            }}
-          />
-          <button onClick={runOcr} disabled={!image || running}>Run OCR</button>
-          <p className="hint">Tip: after upload, click once to start the grid box and click again to finish it, then run OCR.</p>
-        </div>
-        <div className="ocr-canvas-wrap">
-          <canvas ref={canvasRef} onClick={handleCanvasClick} />
-        </div>
-        <div className="status">{status}</div>
-      </div>
-    </section>
+    <Paper elevation={3} className="panel" component="section">
+      <Typography variant="h6" gutterBottom>
+        Screenshot OCR
+      </Typography>
+      <Stack spacing={2} className="ocr">
+        <Stack spacing={1} className="ocr-controls">
+          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+            <Button variant="outlined" component="label">
+              Upload image
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) handleFile(file);
+                }}
+              />
+            </Button>
+            <Button variant="contained" onClick={runOcr} disabled={!image || running}>
+              Run OCR
+            </Button>
+          </Stack>
+          <Typography variant="body2" className="hint">
+            Tip: after upload, click once to start the grid box and click again to finish it, then run OCR.
+          </Typography>
+        </Stack>
+        <Box className="ocr-canvas-wrap">
+          <Box component="canvas" ref={canvasRef} onClick={handleCanvasClick} />
+        </Box>
+        <Typography variant="body2" className="status">
+          {status}
+        </Typography>
+      </Stack>
+    </Paper>
   );
 }

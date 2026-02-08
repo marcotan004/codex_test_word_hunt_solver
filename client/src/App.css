@@ -114,6 +114,15 @@ body {
   color: #1f1f1f;
 }
 
+.cell .MuiInputBase-root {
+  width: 100%;
+  height: 100%;
+}
+
+.cell .MuiInputBase-input {
+  padding: 0;
+}
+
 .cell.active {
   outline: 3px solid var(--accent-2);
   outline-offset: -3px;

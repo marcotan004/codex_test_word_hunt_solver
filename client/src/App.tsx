@@ -1,21 +1,11 @@
 import { useMemo, useRef, useState } from 'react';
 import './App.css';
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Container, Paper, Stack, Typography } from '@mui/material';
 import { solveBoard, type SolveResult } from './lib/api';
 import Header from './components/Header';
 import Grid from './components/Grid';
 import OcrPanel from './components/OcrPanel';
+import Results from './components/Results';
 import { featureFlags } from './lib/featureFlags';
 
 const GRID_SIZE = 4;
@@ -183,61 +173,16 @@ function App() {
             ) : null}
           </Stack>
 
-          <Paper elevation={3} className="panel">
-            <Typography variant="h6" gutterBottom>
-              Results
-            </Typography>
-            <Box className="results">
-              <Box className="result-controls">
-                <FormControl size="small" sx={{ minWidth: 160 }}>
-                  <InputLabel id="sort-by-label">Sort by</InputLabel>
-                  <Select
-                    labelId="sort-by-label"
-                    label="Sort by"
-                    value={sortBy}
-                    onChange={(event) => setSortBy(event.target.value)}
-                  >
-                    <MenuItem value="score">Score</MenuItem>
-                    <MenuItem value="length">Length</MenuItem>
-                    <MenuItem value="alpha">Alphabetical</MenuItem>
-                    <MenuItem value="position">Board Position</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <Stack direction="row" spacing={1} className="result-actions">
-                  <Button variant="outlined" onClick={startAnimation} disabled={isAnimating || results.length === 0}>
-                    Play Top 20
-                  </Button>
-                  <Button variant="outlined" onClick={stopAnimation} disabled={!isAnimating}>
-                    Stop
-                  </Button>
-                </Stack>
-
-                <Box className="totals">
-                  <span>{results.length} words</span>
-                  <span>Score: {totalScore}</span>
-                </Box>
-              </Box>
-
-              <Box className="results-list">
-                {sortedResults.map((item) => (
-                  <Box
-                    key={item.word}
-                    className="result-row"
-                    onMouseEnter={() => {
-                      if (!isAnimating) setActivePath(item.path);
-                    }}
-                    onMouseLeave={() => setActivePath([])}
-                    onClick={() => setActivePath(item.path)}
-                  >
-                    <span>{item.word}</span>
-                    <span>{item.length}</span>
-                    <span>{item.score}</span>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          </Paper>
+          <Results
+            results={sortedResults}
+            totalScore={totalScore}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            onHover={setActivePath}
+            onPlay={startAnimation}
+            onStop={stopAnimation}
+            isAnimating={isAnimating}
+          />
         </Box>
       </Container>
     </Box>

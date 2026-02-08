@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
+import { Box, InputBase } from '@mui/material';
 
 type GridProps = {
   grid: string[];
@@ -75,22 +76,26 @@ export default function Grid({ grid, onChange, activePath, cursorIndex }: GridPr
   }, [activePath, cursorIndex]);
 
   return (
-    <div className="grid-wrap">
-      <canvas ref={canvasRef} className="grid-canvas" />
-      <div ref={gridRef} className="grid">
+    <Box className="grid-wrap">
+      <Box component="canvas" ref={canvasRef} className="grid-canvas" />
+      <Box ref={gridRef} className="grid">
         {grid.map((value, index) => (
-          <div
+          <Box
             key={index}
             className={`cell ${activePath.includes(index) ? 'active' : ''} ${cursorIndex === index ? 'cursor' : ''}`}
           >
-            <input
+            <InputBase
               value={value}
-              maxLength={1}
+              inputProps={{
+                maxLength: 1,
+                'aria-label': `Cell ${index + 1}`,
+              }}
               onChange={(event) => handleInput(index, event.target.value)}
+              sx={{ width: '100%', height: '100%' }}
             />
-          </div>
+          </Box>
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

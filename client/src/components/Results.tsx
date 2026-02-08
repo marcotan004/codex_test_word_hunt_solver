@@ -1,4 +1,15 @@
 import type { SolveResult } from '../lib/api';
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Stack,
+  Typography,
+} from '@mui/material';
 
 type ResultsProps = {
   results: SolveResult[];
@@ -22,48 +33,60 @@ export default function Results({
   isAnimating,
 }: ResultsProps) {
   return (
-    <section className="panel">
-      <h2>Results</h2>
-      <div className="results">
-        <div className="result-controls">
-          <label>
-            Sort by
-            <select value={sortBy} onChange={(event) => onSortChange(event.target.value)}>
-              <option value="score">Score</option>
-              <option value="length">Length</option>
-              <option value="alpha">Alphabetical</option>
-              <option value="position">Board Position</option>
-            </select>
-          </label>
-          <div className="result-actions">
-            <button onClick={onPlay} disabled={isAnimating || results.length === 0}>
+    <Paper elevation={3} className="panel" component="section">
+      <Typography variant="h6" gutterBottom>
+        Results
+      </Typography>
+      <Box className="results">
+        <Box className="result-controls">
+          <FormControl size="small" sx={{ minWidth: 160 }}>
+            <InputLabel id="sort-by-label">Sort by</InputLabel>
+            <Select
+              labelId="sort-by-label"
+              label="Sort by"
+              value={sortBy}
+              onChange={(event) => onSortChange(event.target.value)}
+            >
+              <MenuItem value="score">Score</MenuItem>
+              <MenuItem value="length">Length</MenuItem>
+              <MenuItem value="alpha">Alphabetical</MenuItem>
+              <MenuItem value="position">Board Position</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Stack direction="row" spacing={1} className="result-actions">
+            <Button variant="outlined" onClick={onPlay} disabled={isAnimating || results.length === 0}>
               Play Top 20
-            </button>
-            <button onClick={onStop} disabled={!isAnimating}>
+            </Button>
+            <Button variant="outlined" onClick={onStop} disabled={!isAnimating}>
               Stop
-            </button>
-          </div>
-          <div className="totals">
+            </Button>
+          </Stack>
+
+          <Box className="totals">
             <span>{results.length} words</span>
             <span>Score: {totalScore}</span>
-          </div>
-        </div>
-        <div className="results-list">
+          </Box>
+        </Box>
+
+        <Box className="results-list">
           {results.map((item) => (
-            <div
+            <Box
               key={item.word}
               className="result-row"
-              onMouseEnter={() => onHover(item.path)}
+              onMouseEnter={() => {
+                if (!isAnimating) onHover(item.path);
+              }}
               onMouseLeave={() => onHover([])}
               onClick={() => onHover(item.path)}
             >
               <span>{item.word}</span>
               <span>{item.length}</span>
               <span>{item.score}</span>
-            </div>
+            </Box>
           ))}
-        </div>
-      </div>
-    </section>
+        </Box>
+      </Box>
+    </Paper>
   );
 }
