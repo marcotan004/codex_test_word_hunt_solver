@@ -77,6 +77,19 @@ When the server is running, open:
 Create a `.env` in `/Users/marcotan/Desktop/codex_test_word_hunt_solver/client` or copy `.env.example`.
 
 - `VITE_FEATURE_OCR=true|false` (default: false)
+- `VITE_FEATURE_OCR_DEBUG=true|false` (default: false, dev-only)
+
+## OCR Usage (Client)
+
+1. Enable OCR with `VITE_FEATURE_OCR=true`.
+2. Upload a screenshot.
+3. Click and drag to select the full 4x4 board (not a single letter).
+4. Run OCR to fill the grid.
+
+Optional:
+- Click "Save grid position" once to reuse the same board crop for future screenshots (stored in localStorage).
+- Click "Clear saved grid" to reset calibration.
+- In dev mode, set `VITE_FEATURE_OCR_DEBUG=true` to show OCR progress metrics and per-cell confidence.
 
 ## Notes
 
